@@ -49,8 +49,8 @@ set_reviewers() {
     IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
 
     #Print the split string
-
-    reviewers+=("${available[RANDOM%${#available[@]}]}")
+    count=${#available[@]}
+    reviewers+=("${available[RANDOM%${count}]}")
 
   elif [[ "$2" == "RTM" ]]; then
     reviewers+=("${FINAL_REVIEWER}")
