@@ -40,20 +40,20 @@ number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 
 set_reviewers() {
-  declare -a reviewers
+  reviewers=()
 
   if [[ "$2" == "RFR" ]]; then
     # add permanent reviewer
-    reviewers+="${PERMANENT_REVIEWER}"
+    reviewers+=("${PERMANENT_REVIEWER}")
     # add random reviewer
     IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
 
     #Print the split string
 
-    reviewers+="${available[RANDOM%${#available[@]}]}"
+    reviewers+=("${available[RANDOM%${#available[@]}]}")
 
   elif [[ "$2" == "RTM" ]]; then
-    reviewers+="${FINAL_REVIEWER}"
+    reviewers+=("${FINAL_REVIEWER}")
   fi
   echo "$reviewers"
 
