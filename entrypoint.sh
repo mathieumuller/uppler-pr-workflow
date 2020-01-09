@@ -55,7 +55,7 @@ set_reviewers() {
   elif [[ "$2" == "RTM" ]]; then
     reviewers+=("${FINAL_REVIEWER}")
   fi
-  echo "$reviewers"
+  echo $reviewers
 
   if (( ${#reviewers[@]} )); then
     curl -sSL \
