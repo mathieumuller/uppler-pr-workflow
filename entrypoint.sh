@@ -23,6 +23,7 @@ action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label "$GITHUB_EVENT_PATH")
 
+echo "$label"
 
 update_pull_request() {
   curl -sSL \
