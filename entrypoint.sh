@@ -24,6 +24,7 @@ number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 
 echo "$label"
+echo "toto"
 echo "${PERMANENT_REVIEWER}"
 
 update_pull_request() {
