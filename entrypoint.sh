@@ -54,7 +54,6 @@ set_reviewers() {
     reviewers+="${FINAL_REVIEWER}"
   fi
 
-    echo reviewers
   if (( ${#reviewers[@]} )); then
     curl -sSL \
       -H "Content-Type: application/json" \
