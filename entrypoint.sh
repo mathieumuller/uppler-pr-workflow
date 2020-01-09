@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eu
 
+# Check env variables
 if [[ -z "$GITHUB_TOKEN" ]]; then
   echo "Set the GITHUB_TOKEN env variable."
   exit 1
@@ -16,30 +17,55 @@ if [[ -z "$GITHUB_EVENT_PATH" ]]; then
   exit 1
 fi
 
+if [[ -z "$PERMANENT_REVIEWER" ]]; then
+  echo "Set the PERMANENT_REVIEWER env variable."
+  exit 1
+fi
+
+if [[ -z "$AVAILABLE_REVIEWERS" ]]; then
+  echo "Set the AVAILABLE_REVIEWERS env variable."
+  exit 1
+fi
+
+if [[ -z "$FINAL_REVIEWER" ]]; then
+  echo "Set the FINAL_REVIEWER env variable."
+  exit 1
+fi
+
 API_HEADER="Accept: application/vnd.github.v3+json; application/vnd.github.antiope-preview+json"
 AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
+permanent_reviewer =
+arr = ${AVAILABLE_REVIEWERS}
+rand=$[$RANDOM % ${#arr[@]}]
+echo "$rand"
 
-echo "${PERMANENT_REVIEWER}"
+set_reviewers() {
+  reviewers = []
 
-update_pull_request() {
-  curl -sSL \
-    -H "Content-Type: application/json" \
-    -H "${AUTH_HEADER}" \
-    -H "${API_HEADER}" \
-    -X $1 \
-    -d "{\"reviewers\":[\"${PERMANENT_REVIEWER}\"]}" \
-    "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${number}/requested_reviewers"
+  if [[ "$2" == "RFR" ]]; then
+    # add permanent reviewer
+    reviewers+="${PERMANENT_REVIEWER}"
+    # add random reviewer
+    available = ${AVAILABLE_REVIEWERS}
+    reviewers+="$[$RANDOM % ${#available[@]}]"
+    echo reviewers
+  elif [[ "$2" == "RTM" ]]; then
+    reviewers+="${FINAL_REVIEWER}"
+  fi
+
+  if (( ${#reviewers[@]} )); then
+    curl -sSL \
+      -H "Content-Type: application/json" \
+      -H "${AUTH_HEADER}" \
+      -H "${API_HEADER}" \
+      -X $1 \
+      -d "{\"reviewers\":${reviewers}}" \
+      "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${number}/requested_reviewers"
+  fi
 }
 
-if [[ "$label" == "WIP" ]]; then
-  update_pull_request 'POST'
-# elif [[ "$action" == "unassigned" ]]; then
-#   update_review_request 'DELETE'
-# else
-#   echo "Ignoring action ${action}"
-#   exit 0
-fi
+set_reviewers 'POST' $label
