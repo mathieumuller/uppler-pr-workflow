@@ -60,7 +60,7 @@ set_reviewers() {
       -H "${AUTH_HEADER}" \
       -H "${API_HEADER}" \
       -X $1 \
-      -d "{\"reviewers\":[${reviewers}]}" \
+      -d "{\"reviewers\":[\"${reviewers}\"]}" \
       "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${number}/requested_reviewers"
   fi
 }
