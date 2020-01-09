@@ -50,7 +50,8 @@ set_reviewers() {
 
     #Print the split string
 
-    reviewers+="$available[RANDOM%${#available[@]}]"
+    reviewers+="${available[RANDOM%${#available[@]}]}"
+
   elif [[ "$2" == "RTM" ]]; then
     reviewers+="${FINAL_REVIEWER}"
   fi
