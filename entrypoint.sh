@@ -41,23 +41,25 @@ label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 
 set_reviewers() {
   declare -a reviewers
-  echo "$1"
-  echo "$2"
 
   if [[ "$2" == "RFR" ]]; then
     # add permanent reviewer
     reviewers+="${PERMANENT_REVIEWER}"
     # add random reviewer
-    available=(`echo "${AVAILABLE_REVIEWERS}" | sed 's/,/\n/g'`)
-    echo "$[$RANDOM % ${#available[@]}]"
-    echo "$[$RANDOM % ${#available[@]}]"
-    echo "$[$RANDOM % ${#available[@]}]"
-    echo "$[$RANDOM % ${#available[@]}]"
-    echo "$[$RANDOM % ${#available[@]}]"
-    reviewers+="$[$RANDOM % ${#available[@]}]"
+    IFS=';' read -ra available <<< "${AVAILABLE_REVIEWERS}"
+
+    #Print the split string
+    count=0
+    for i in "${available[@]}"
+    do
+      count+=1
+    done
+
+    reviewers+="$available[RANDOM%${count}]"
   elif [[ "$2" == "RTM" ]]; then
     reviewers+="${FINAL_REVIEWER}"
   fi
+  echo "$reviewers"
 
   if (( ${#reviewers[@]} )); then
     curl -sSL \
