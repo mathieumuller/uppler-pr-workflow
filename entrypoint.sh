@@ -49,7 +49,11 @@ set_reviewers() {
     reviewers+="${PERMANENT_REVIEWER}"
     # add random reviewer
     available=(`echo "${AVAILABLE_REVIEWERS}" | sed 's/,/\n/g'`)
-    echo "$available"
+    echo "$[$RANDOM % ${#available[@]}]"
+    echo "$[$RANDOM % ${#available[@]}]"
+    echo "$[$RANDOM % ${#available[@]}]"
+    echo "$[$RANDOM % ${#available[@]}]"
+    echo "$[$RANDOM % ${#available[@]}]"
     reviewers+="$[$RANDOM % ${#available[@]}]"
   elif [[ "$2" == "RTM" ]]; then
     reviewers+="${FINAL_REVIEWER}"
