@@ -40,7 +40,7 @@ number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 
 set_reviewers() {
-  reviewers = []
+  declare -a reviewers
 
   if [[ "$2" == "RFR" ]]; then
     # add permanent reviewer
