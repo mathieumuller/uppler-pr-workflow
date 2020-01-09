@@ -38,10 +38,6 @@ AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
-permanent_reviewer =
-arr = ${AVAILABLE_REVIEWERS}
-rand=$[$RANDOM % ${#arr[@]}]
-echo "$rand"
 
 set_reviewers() {
   reviewers = []
