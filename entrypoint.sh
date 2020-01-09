@@ -31,7 +31,8 @@ update_pull_request() {
     -H "${AUTH_HEADER}" \
     -H "${API_HEADER}" \
     -X $1 \
-    -d "{\"reviewers\":[\"${PERMANENT_REVIEWER}\"]}" \
+    # -d "{\"reviewers\":[\"${PERMANENT_REVIEWER}\"]}" \
+    -d "{\"reviewers\":[@adpauly]}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${number}/requested_reviewers"
 }
 
