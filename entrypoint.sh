@@ -24,6 +24,7 @@ number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 
 echo "$label"
+echo "${PERMANENT_REVIEWER}"
 
 update_pull_request() {
   curl -sSL \
@@ -31,8 +32,7 @@ update_pull_request() {
     -H "${AUTH_HEADER}" \
     -H "${API_HEADER}" \
     -X $1 \
-    # -d "{\"reviewers\":[\"${PERMANENT_REVIEWER}\"]}" \
-    -d "{\"reviewers\":[@adpauly]}" \
+    -d "{\"reviewers\":[\"${PERMANENT_REVIEWER}\"]}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${number}/requested_reviewers"
 }
 
