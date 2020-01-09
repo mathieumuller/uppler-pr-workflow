@@ -53,7 +53,7 @@ set_reviewers() {
   elif [[ "$2" == "RTM" ]]; then
     reviewers+="${FINAL_REVIEWER}"
   fi
-
+  echo "${reviewers}"
   if [[ ! -z "${reviewers}" ]]; then
     curl -sSL \
       -H "Content-Type: application/json" \
