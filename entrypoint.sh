@@ -46,16 +46,11 @@ set_reviewers() {
     # add permanent reviewer
     reviewers+="${PERMANENT_REVIEWER}"
     # add random reviewer
-    IFS=';' read -ra available <<< "${AVAILABLE_REVIEWERS}"
+    IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
 
     #Print the split string
-    count=0
-    for i in "${available[@]}"
-    do
-      count+=1
-    done
 
-    reviewers+="$available[RANDOM%${count}]"
+    reviewers+="$available[RANDOM%${#available[@]}]"
   elif [[ "$2" == "RTM" ]]; then
     reviewers+="${FINAL_REVIEWER}"
   fi
