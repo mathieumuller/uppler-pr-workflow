@@ -36,7 +36,7 @@ update_pull_request() {
 }
 
 if [[ "$label" == "WIP" ]]; then
-  update_review_request 'POST'
+  update_pull_request 'POST'
 # elif [[ "$action" == "unassigned" ]]; then
 #   update_review_request 'DELETE'
 # else
