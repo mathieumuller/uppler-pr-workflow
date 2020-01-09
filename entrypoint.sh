@@ -44,14 +44,14 @@ set_reviewers() {
 
   if [[ "$2" == "RFR" ]]; then
     # add permanent reviewer
-    reviewers+="${PERMANENT_REVIEWER}"
+    reviewers+="\"${PERMANENT_REVIEWER}\""
     # add random reviewer
     IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
     count=${#available[@]}
-    reviewers+=",${available[RANDOM%${count}]}"
+    reviewers+=",\"${available[RANDOM%${count}]}\""
 
   elif [[ "$2" == "RTM" ]]; then
-    reviewers+="${FINAL_REVIEWER}"
+    reviewers+="\"${FINAL_REVIEWER}\""
   fi
   echo "${reviewers}"
   if [[ ! -z "${reviewers}" ]]; then
@@ -60,7 +60,7 @@ set_reviewers() {
       -H "${AUTH_HEADER}" \
       -H "${API_HEADER}" \
       -X $1 \
-      -d "{\"reviewers\":[\"${reviewers}\"]}" \
+      -d "{\"reviewers\":[${reviewers}]}" \
       "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${number}/requested_reviewers"
   fi
 }
