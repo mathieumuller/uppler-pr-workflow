@@ -40,18 +40,18 @@ number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 
 set_reviewers() {
-  reviewers=()
+  reviewers=''
 
   if [[ "$2" == "RFR" ]]; then
     # add permanent reviewer
-    reviewers+=("${PERMANENT_REVIEWER}")
+    reviewers+="${PERMANENT_REVIEWER}"
     # add random reviewer
-    # IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
-    # count=${#available[@]}
-    # reviewers+=("${available[RANDOM%${count}]}")
+    IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
+    count=${#available[@]}
+    reviewers+=",${available[RANDOM%${count}]}"
 
   elif [[ "$2" == "RTM" ]]; then
-    reviewers+=("${FINAL_REVIEWER}")
+    reviewers+="${FINAL_REVIEWER}"
   fi
 
   if (( ${#reviewers[@]} )); then
@@ -60,7 +60,7 @@ set_reviewers() {
       -H "${AUTH_HEADER}" \
       -H "${API_HEADER}" \
       -X $1 \
-      -d "{\"reviewers\":${reviewers}}" \
+      -d "{\"reviewers\":[${reviewers}]}" \
       "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${number}/requested_reviewers"
   fi
 }
