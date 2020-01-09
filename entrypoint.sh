@@ -46,16 +46,13 @@ set_reviewers() {
     # add permanent reviewer
     reviewers+=("${PERMANENT_REVIEWER}")
     # add random reviewer
-    IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
-
-    #Print the split string
-    count=${#available[@]}
-    reviewers+=("${available[RANDOM%${count}]}")
+    # IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
+    # count=${#available[@]}
+    # reviewers+=("${available[RANDOM%${count}]}")
 
   elif [[ "$2" == "RTM" ]]; then
     reviewers+=("${FINAL_REVIEWER}")
   fi
-  echo $reviewers
 
   if (( ${#reviewers[@]} )); then
     curl -sSL \
