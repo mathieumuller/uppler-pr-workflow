@@ -50,7 +50,7 @@ set_reviewers() {
     # add permanent reviewer
     reviewers+="${PERMANENT_REVIEWER}"
     # add random reviewer
-    available = ${AVAILABLE_REVIEWERS}
+    available = IFS=',' read -r -a ${AVAILABLE_REVIEWERS} <<< "$string"
     reviewers+="$[$RANDOM % ${#available[@]}]"
     echo reviewers
   elif [[ "$2" == "RTM" ]]; then
