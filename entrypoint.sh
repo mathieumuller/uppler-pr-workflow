@@ -54,7 +54,7 @@ set_reviewers() {
     reviewers+="${FINAL_REVIEWER}"
   fi
 
-  if (( ${#reviewers[@]} )); then
+  if [[ ! -z "${reviewers}" ]]; then
     curl -sSL \
       -H "Content-Type: application/json" \
       -H "${AUTH_HEADER}" \
