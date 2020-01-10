@@ -36,12 +36,12 @@ GITHUB_API_HEADER="Accept: application/vnd.github.v3+json; application/vnd.githu
 GITHUB_AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 
-action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
-number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 event=$(jq --raw-output . "$GITHUB_EVENT_PATH")
-echo $event
-exit 0
+pull_request=$event | jq '.pull_request'
+action=$event | jq '.action'
+number=$pull_request | jq '.number'
+label=$event | jq '.label'
+label_name=$label | jq '.name'
 
 add_reviewers() {
   if [[ ! -z "$1" ]]; then
@@ -57,7 +57,7 @@ add_reviewers() {
 
 if [[ $action == "labeled" ]];then
     reviewers=""
-    if [[ "$1" == "RFR" ]]; then
+    if [[ "$label_name" == "RFR" ]]; then
       # add permanent reviewer
       reviewers+="\"${PERMANENT_REVIEWER}\""
       # add random reviewer
@@ -65,7 +65,7 @@ if [[ $action == "labeled" ]];then
       count=${#available[@]}
       reviewers+=",\"${available[RANDOM%${count}]}\""
 
-    elif [[ "$1" == "RTM" ]]; then
+    elif [[ "$label_name" == "RTM" ]]; then
       reviewers+="\"${FINAL_REVIEWER}\""
     fi
 
