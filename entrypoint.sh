@@ -39,7 +39,7 @@ GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
-event=$(jq --raw-output .event "$GITHUB_EVENT_PATH")
+event=$(jq --raw-output . "$GITHUB_EVENT_PATH")
 echo $event
 exit 0
 
