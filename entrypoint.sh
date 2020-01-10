@@ -32,17 +32,32 @@ if [[ -z "$FINAL_REVIEWER" ]]; then
   exit 1
 fi
 
-API_HEADER="Accept: application/vnd.github.v3+json; application/vnd.github.antiope-preview+json"
-AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
+GITHUB_API_HEADER="Accept: application/vnd.github.v3+json; application/vnd.github.antiope-preview+json"
+GITHUB_AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
+GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 
-set_reviewers() {
-  reviewers=''
+add_reviewers() {
+  if [[ ! -z "${reviewers}" ]]; then
+    curl -sSL \
+      -H "Content-Type: application/json" \
+      -H "${GITHUB_AUTH_HEADER}" \
+      -H "${GITHUB_API_HEADER}" \
+      -X "POST" \
+      -d "{\"reviewers\":[$1]}" \
+      "${GITHUB_REPOSITORY_URL}/pulls/${number}/requested_reviewers"
+  fi
+}
 
-  if [[ "$2" == "RFR" ]]; then
+echo $action
+exit 0
+
+get_reviewers() {
+  reviewers=""
+  if [[ "$1" == "RFR" ]]; then
     # add permanent reviewer
     reviewers+="\"${PERMANENT_REVIEWER}\""
     # add random reviewer
@@ -50,19 +65,14 @@ set_reviewers() {
     count=${#available[@]}
     reviewers+=",\"${available[RANDOM%${count}]}\""
 
-  elif [[ "$2" == "RTM" ]]; then
+  elif [[ "$1" == "RTM" ]]; then
     reviewers+="\"${FINAL_REVIEWER}\""
-  fi
-  echo "${reviewers}"
-  if [[ ! -z "${reviewers}" ]]; then
-    curl -sSL \
-      -H "Content-Type: application/json" \
-      -H "${AUTH_HEADER}" \
-      -H "${API_HEADER}" \
-      -X $1 \
-      -d "{\"reviewers\":[${reviewers}]}" \
-      "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${number}/requested_reviewers"
   fi
 }
 
-set_reviewers 'POST' $label
+if [[ $action == "labeled" ]];then
+    add_reviewers $label
+fi
+
+
+set_reviewers $label
