@@ -39,6 +39,9 @@ GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
+event=$(jq --raw-output .event "$GITHUB_EVENT_PATH")
+echo $event
+exit 0
 
 add_reviewers() {
   if [[ ! -z "$1" ]]; then
@@ -51,8 +54,6 @@ add_reviewers() {
       "${GITHUB_REPOSITORY_URL}/pulls/${number}/requested_reviewers"
   fi
 }
-echo $(jq --raw-output '.' $GITHUB_EVENT_PATH)
-exit 0
 
 if [[ $action == "labeled" ]];then
     reviewers=""
@@ -71,5 +72,3 @@ if [[ $action == "labeled" ]];then
     add_reviewers $reviewers
 fi
 
-
-set_reviewers $label
