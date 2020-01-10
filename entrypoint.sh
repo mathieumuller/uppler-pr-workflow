@@ -51,7 +51,7 @@ add_reviewers() {
       "${GITHUB_REPOSITORY_URL}/pulls/${number}/requested_reviewers"
   fi
 }
-echo $GITHUB_EVENT_PATH
+echo $(jq --raw-output $GITHUB_EVENT_PATH)
 exit 0
 
 if [[ $action == "labeled" ]];then
