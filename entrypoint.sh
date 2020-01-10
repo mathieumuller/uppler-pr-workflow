@@ -41,7 +41,7 @@ number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 
 add_reviewers() {
-  if [[ ! -z "${reviewers}" ]]; then
+  if [[ ! -z "$1" ]]; then
     curl -sSL \
       -H "Content-Type: application/json" \
       -H "${GITHUB_AUTH_HEADER}" \
@@ -51,27 +51,24 @@ add_reviewers() {
       "${GITHUB_REPOSITORY_URL}/pulls/${number}/requested_reviewers"
   fi
 }
-
-echo $action
+echo $GITHUB_EVENT_PATH
 exit 0
 
-get_reviewers() {
-  reviewers=""
-  if [[ "$1" == "RFR" ]]; then
-    # add permanent reviewer
-    reviewers+="\"${PERMANENT_REVIEWER}\""
-    # add random reviewer
-    IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
-    count=${#available[@]}
-    reviewers+=",\"${available[RANDOM%${count}]}\""
-
-  elif [[ "$1" == "RTM" ]]; then
-    reviewers+="\"${FINAL_REVIEWER}\""
-  fi
-}
-
 if [[ $action == "labeled" ]];then
-    add_reviewers $label
+    reviewers=""
+    if [[ "$1" == "RFR" ]]; then
+      # add permanent reviewer
+      reviewers+="\"${PERMANENT_REVIEWER}\""
+      # add random reviewer
+      IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
+      count=${#available[@]}
+      reviewers+=",\"${available[RANDOM%${count}]}\""
+
+    elif [[ "$1" == "RTM" ]]; then
+      reviewers+="\"${FINAL_REVIEWER}\""
+    fi
+
+    add_reviewers $reviewers
 fi
 
 
