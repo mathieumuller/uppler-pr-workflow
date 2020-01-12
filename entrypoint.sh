@@ -38,10 +38,10 @@ GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 
 event=$(jq --compact-output . "$GITHUB_EVENT_PATH")
 
-pull_request=$(jq --compact-output . "$event")
-echo pull_request
+pull_request=$($event| jq --compact-output '.pull_request')
+echo $pull_request
 exit 0
-action=$event| jq --compact-output '.action'
+action=
 label=$event | jq --compact-output '.label.name'
 state=$pull_request | jq --compact-output '.state'
 
