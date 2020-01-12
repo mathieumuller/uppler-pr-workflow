@@ -38,11 +38,11 @@ GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 
 event=$(jq --compact-output . "$GITHUB_EVENT_PATH")
 pull_request=$($event| jq --compact-output '.pull_request')
+author=$($pull_request| jq --compact-output '.user.login')
 action=$($event| jq --compact-output '.action')
 label=$($event| jq --compact-output '.label.name')
 state=$($pull_request| jq --compact-output '.state')
-echo $event
-exit 0
+echo $state
 add_reviewers() {
   if [[ ! -z "$1" ]]; then
     curl -sSL \
@@ -62,6 +62,8 @@ if [[ $action == "labeled" ]];then
       reviewers+="\"${PERMANENT_REVIEWER}\""
       # add random reviewer
       IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
+      # remove author from available reviewers
+      available=${available[@]/$author}
       count=${#available[@]}
       reviewers+=",\"${available[RANDOM%${count}]}\""
 
