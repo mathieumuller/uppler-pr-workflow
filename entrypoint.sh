@@ -37,10 +37,10 @@ GITHUB_AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 
 event=$(jq --raw-output . "$GITHUB_EVENT_PATH")
-pull_request="${event} | jq '.pull_request'"
-action="${event} | jq '.action'" 
-label="${event} | jq '.label.name'"
-state="${pull_request} | jq '.state'"
+pull_request=$(jq --raw-output .pull_request "${event}")
+action=$(jq --raw-output .action "${event}")
+label=$(jq --raw-output .label.name "${event}")
+state=$(jq --raw-output .state "${pull_request}")
 
 echo "${action} | ${state}"
 exit 0;
