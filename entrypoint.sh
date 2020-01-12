@@ -37,8 +37,12 @@ GITHUB_AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 
 event=$(jq --raw-output . "$GITHUB_EVENT_PATH")
-echo ${event} | jq '.pull_request' --raw-output
-exit 0
+pull_request=${event} | jq '.pull_request'
+action=${event} | jq '.action' 
+label=${event} | jq '.label.name'
+
+echo ${pull_request} | jq '.state'
+exit 0;
 
 add_reviewers() {
   if [[ ! -z "$1" ]]; then
