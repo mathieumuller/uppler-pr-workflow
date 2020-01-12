@@ -39,15 +39,12 @@ GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 event=$(jq --compact-output . "$GITHUB_EVENT_PATH")
 
 pull_request="$event | jq --compact-output '.pull_request'"
-echo $pull_request
+action="$event| jq --raw-output '.action'"
+label="$event | jq --raw-output '.label.name'"
+state="$pull_request | jq --raw-output '.state'"
+
+echo $state 
 exit 0
-action="${event}" | jq --raw-output ".action"
-label="${event}" | jq --raw-output ".label.name"
-state="${pull_request}" | jq --raw-output ".state"
-
-echo "${action} | ${state}"
-exit 0;
-
 add_reviewers() {
   if [[ ! -z "$1" ]]; then
     curl -sSL \
