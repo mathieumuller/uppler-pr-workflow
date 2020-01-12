@@ -56,7 +56,7 @@ add_reviewers() {
 
 if [[ $action == "labeled" ]];then
     reviewers=""
-    if [[ "$label_name" == "RFR" ]]; then
+    if [[ "$label" == "RFR" ]]; then
       # add permanent reviewer
       reviewers+="\"${PERMANENT_REVIEWER}\""
       # add random reviewer
@@ -66,7 +66,7 @@ if [[ $action == "labeled" ]];then
       count=${#available[@]}
       reviewers+=",\"${available[RANDOM%${count}]}\""
 
-    elif [[ "$label_name" == "RTM" ]]; then
+    elif [[ "$label" == "RTM" ]]; then
       reviewers+="\"${FINAL_REVIEWER}\""
     fi
 
