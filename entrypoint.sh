@@ -38,7 +38,7 @@ GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 
 inspect_event()
 {
-    echo $(jq --compact-output $1 "$GITHUB_EVENT_PATH")
+    echo $(jq --raw-output $1 "$GITHUB_EVENT_PATH")
 }
 
 pull_request=$(inspect_event('.pull_request'))
