@@ -41,7 +41,7 @@ pull_request="${event} | jq '.pull_request'"
 action="${event} | jq '.action'" 
 label="${event} | jq '.label.name'"
 
-echo "${pull_request} | jq '.state'"
+echo "${action} | ${label}"
 exit 0;
 
 add_reviewers() {
