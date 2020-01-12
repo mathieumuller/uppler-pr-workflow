@@ -36,8 +36,14 @@ GITHUB_API_HEADER="Accept: application/vnd.github.v3+json; application/vnd.githu
 GITHUB_AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 
-event=$(jq --compact-output . "$GITHUB_EVENT_PATH")
-pull_request=$($event| jq --compact-output '.pull_request')
+inspect_event()
+{
+    echo $(jq --compact-output $1 "$GITHUB_EVENT_PATH")
+}
+
+pull_request=$(inspect_event('.pull_request'))
+echo $pull_request
+exit 0
 author=$($pull_request| jq --compact-output '.user.login')
 action=$($event| jq --compact-output '.action')
 label=$($event| jq --compact-output '.label.name')
