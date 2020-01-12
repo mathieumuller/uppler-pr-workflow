@@ -42,7 +42,7 @@ state=$(jq --raw-output .pull_request.state "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
-echo $state
+
 add_reviewers() {
   if [[ ! -z "$1" ]]; then
     curl -sSL \
@@ -70,7 +70,7 @@ if [[ $action == "labeled" ]];then
     elif [[ "$label" == "RTM" ]]; then
       reviewers+="\"${FINAL_REVIEWER}\""
     fi
-
+    echo $reviewers
     add_reviewers $reviewers
 fi
 
