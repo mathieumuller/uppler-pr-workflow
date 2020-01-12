@@ -64,6 +64,8 @@ if [[ $action == "labeled" ]];then
       IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
       # remove author from available reviewers
       available=${available[@]/$author}
+      # remove permanent reviewer from available reviewers
+      available=${available[@]/$PERMANENT_REVIEWER}
       count=${#available[@]}
       reviewers+=",\"${available[RANDOM%${count}]}\""
 
