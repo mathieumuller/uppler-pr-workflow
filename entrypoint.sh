@@ -37,12 +37,10 @@ GITHUB_AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 
 pull_request=$(jq --raw-output .pull_request "$GITHUB_EVENT_PATH")
-echo $pull_request
-exit 0
-author=$($pull_request| jq --compact-output '.user.login')
-action=$($event| jq --compact-output '.action')
-label=$($event| jq --compact-output '.label.name')
-state=$($pull_request| jq --compact-output '.state')
+author=$(jq --raw-output .pull_request.user.login "$GITHUB_EVENT_PATH")
+state=$(jq --raw-output .pull_request.state "$GITHUB_EVENT_PATH")
+action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
+label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 echo $state
 add_reviewers() {
   if [[ ! -z "$1" ]]; then
