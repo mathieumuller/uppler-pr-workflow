@@ -40,8 +40,9 @@ event=$(jq --raw-output . "$GITHUB_EVENT_PATH")
 pull_request="${event} | jq '.pull_request'"
 action="${event} | jq '.action'" 
 label="${event} | jq '.label.name'"
+state="${pull_request} | jq '.state'"
 
-echo "${action} | ${label}"
+echo "${action} | ${state}"
 exit 0;
 
 add_reviewers() {
