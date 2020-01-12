@@ -41,7 +41,7 @@ pull_request=$($event| jq --compact-output '.pull_request')
 action=$($event| jq --compact-output '.action')
 label=$($event| jq --compact-output '.label.name')
 state=$($pull_request| jq --compact-output '.state')
-echo $pull_request
+echo $event
 exit 0
 add_reviewers() {
   if [[ ! -z "$1" ]]; then
