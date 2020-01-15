@@ -59,21 +59,21 @@ if [[ $action == "labeled" ]];then
     reviewers=""
     if [[ "$label" == "RFR" ]]; then
       # add permanent reviewer
-      reviewers+="\"${PERMANENT_REVIEWER}\""
+      reviewers+="${PERMANENT_REVIEWER}"
       # add random reviewer
       available=("${AVAILABLE_REVIEWERS}") 
  
       # remove author from available reviewers
       rmv=("${author} ${PERMANENT_REVIEWER}")
-      available=${available[@]/$rmv}
+      available=${available[@]/$rmv}  
       # remove permanent reviewer from available reviewers
       available=${available[@]/$PERMANENT_REVIEWER}
       count=${#available[@]}
       random_reviewer=${available[RANDOM%${count}]}
-      reviewers+=",\"${random_reviewer}\""
+      reviewers+=",${random_reviewer}"
 
     elif [[ "$label" == "RTM" ]]; then
-      reviewers+="\"${FINAL_REVIEWER}\""
+      reviewers+="${FINAL_REVIEWER}"
     fi
     echo $reviewers
     add_reviewers $reviewers
