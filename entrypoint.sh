@@ -67,7 +67,8 @@ if [[ $action == "labeled" ]];then
       # remove permanent reviewer from available reviewers
       available=${available[@]/$PERMANENT_REVIEWER}
       count=${#available[@]}
-      reviewers+=",\"${available[RANDOM%${count}]}\""
+      random_reviewer=$available[RANDOM%${count}]
+      reviewers+=",\"${random_reviewer}\""
 
     elif [[ "$label" == "RTM" ]]; then
       reviewers+="\"${FINAL_REVIEWER}\""
