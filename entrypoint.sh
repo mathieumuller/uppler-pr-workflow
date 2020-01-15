@@ -62,6 +62,9 @@ if [[ $action == "labeled" ]];then
       reviewers+="\"${PERMANENT_REVIEWER}\""
       # add random reviewer
       IFS=' ' read -ra available <<< "${AVAILABLE_REVIEWERS}"
+
+      echo "${available[*]}"
+      exit 0
       # remove author from available reviewers
       available=${available[@]/$author}
       # remove permanent reviewer from available reviewers
