@@ -61,8 +61,9 @@ if [[ $action == "labeled" ]];then
       # add permanent reviewer
       reviewers+="\"${PERMANENT_REVIEWER}\""
       # add random reviewer
-      IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
-
+      available=("${AVAILABLE_REVIEWERS}")
+      # IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
+ 
       # remove author from available reviewers
       available=${available[@]/($author)}
       echo "${available[*]}"
