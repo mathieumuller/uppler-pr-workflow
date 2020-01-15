@@ -65,7 +65,8 @@ if [[ $action == "labeled" ]];then
       # IFS=',' read -ra available <<< "${AVAILABLE_REVIEWERS}"
  
       # remove author from available reviewers
-      available=${available[@]/($author)}
+      toto=("$author")
+      available=${available[@]/$toto}
       echo "${available[*]}"
       exit 0
       # remove permanent reviewer from available reviewers
