@@ -45,7 +45,7 @@ number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 
-echo pull_request
+echo ${pull_request}
 
 # THIS FUNCTION ADD RANDOM REVIEWERS TO THE PULL REQUEST
 # add_reviewers() {
