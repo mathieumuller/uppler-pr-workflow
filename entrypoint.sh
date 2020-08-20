@@ -38,15 +38,25 @@ GITHUB_AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 GITHUB_REPOSITORY_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 
 # GET VARIABLES
-pull_request=$(jq --raw-output .pull_request "$GITHUB_EVENT_PATH")
-author=$(jq --raw-output .pull_request.user.login "$GITHUB_EVENT_PATH")
-state=$(jq --raw-output .pull_request.state "$GITHUB_EVENT_PATH")
-number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
-label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
+# pull_request=$(jq --raw-output .pull_request "$GITHUB_EVENT_PATH")
+# author=$(jq --raw-output .pull_request.user.login "$GITHUB_EVENT_PATH")
+# state=$(jq --raw-output .pull_request.state "$GITHUB_EVENT_PATH")
+# number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+# label=$(jq --raw-output .label.name "$GITHUB_EVENT_PATH")
 
 cat $GITHUB_EVENT_PATH
-echo ${pull_request}
+# on review submitted
+if [[ $action == "submitted" ]];then
+    state=$(jq --raw-output .state "$GITHUB_EVENT_PATH")
+    # if approval has been submitted and number of approvals >= 2 ->set label RTM
+    if [[ $state == "approved" ]];then
+    fi
+    # if changes has been requested ->set label FFF
+    if [[ $state == "approved" ]];then
+    fi
+fi
+
 
 # THIS FUNCTION ADD RANDOM REVIEWERS TO THE PULL REQUEST
 # add_reviewers() {
